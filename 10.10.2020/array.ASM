@@ -31,7 +31,7 @@ start:
         push strScanInt
         call [scanf]
 
-        cmp [vec_size], 0
+        cmp [vec_size], 1
         jl fail
 
         cmp [vec_size], 100
