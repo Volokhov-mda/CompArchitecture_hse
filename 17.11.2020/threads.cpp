@@ -98,7 +98,7 @@ int main (int argc, char *argv[]) {
     // Инициализация двоичного семафора
     pthread_mutex_init(&mutex1, NULL);
 
-    srand(time(NULL));
+    /*srand(time(NULL));*/
 
     for (int i = 0; i < n; ++i) {
         cout << "Enter matrix numbers for line #" << i + 1 << endl;
@@ -106,11 +106,11 @@ int main (int argc, char *argv[]) {
         matrixA.push_back(tempVector);
 
         for (int j = 0; j < n; ++j) {
-            /*string numToAdd;
+            string numToAdd;
             cin >> numToAdd;
-            matrixA[i].push_back(stoi(numToAdd));*/
-            matrixA[i].push_back(rand() % 100);
-            cout << matrixA[i][j] << endl;
+            matrixA[i].push_back(stoi(numToAdd));
+            /*matrixA[i].push_back(rand() % 100);
+            cout << matrixA[i][j] << endl;*/
         }
 
         printf("\n");
