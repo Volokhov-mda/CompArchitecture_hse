@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 #include <string>
 #include <vector>
@@ -69,58 +67,58 @@ vector<vector<int>> getSubMatrix(vector<vector<int>> matrix, int m) {
 }
 
 // Стартовая функция для дочерних потоков.
-void func(int matrixSize, int numOfThreads ) {
-    #pragma omp parallel num_threads(numOfThreads)
+void func(int matrixSize, int numOfThreads) {
+#pragma omp parallel num_threads(numOfThreads)
     {
         // Квадратная подматрица размерностью m x m (m на отрезке [1; n]).
         vector<vector<int>> subMatrix;
         int rang;
 
-        #pragma omp for
+#pragma omp for
         for (int i = 1; i <= matrixSize; i++) {
-            if (i == n) {
-                subMatrix = matrixA;
-            } else {
-                subMatrix = getSubMatrix(matrixA, i);
-            }
+            if (!(maxRang == matrixSize)) {
+                if (i == n) {
+                    subMatrix = matrixA;
+                }
+                else {
+                    subMatrix = getSubMatrix(matrixA, i);
+                }
 
-            rang = computeRank(subMatrix);
+                rang = computeRank(subMatrix);
 
-            #pragma omp critical
-            {
-                maxRang = rang > maxRang ? rang : maxRang;
+#pragma omp critical
+                {
+                    maxRang = rang > maxRang ? rang : maxRang;
 
-                printf("Thread #%d calculated rank of minor %d x %d: %d\n", omp_get_thread_num() + 1, i, i, rang);
+                    printf("Thread #%d calculated rank of minor %d x %d: %d\n", omp_get_thread_num() + 1, i, i, rang);
+                }
             }
         }
     }
 }
 
-int THREAD_NUM;
-
 int main(int argc, char* argv[]) {
-    const int matrixSize = stoi(argv[1]);
+    const int MATRIX_SIZE = n = stoi(argv[1]);
     const int THREAD_NUM = stoi(argv[2]);
-
     srand(time(NULL));
-
-    for (int i = 0; i < matrixSize; ++i) {
+    for (int i = 0; i < MATRIX_SIZE; ++i) {
         cout << "Enter matrix numbers for line #" << i + 1 << endl;
         vector<int> tempVector;
         matrixA.push_back(tempVector);
 
-        for (int j = 0; j < matrixSize; ++j) {
-//            string numToAdd;
-//            cin >> numToAdd;
-//            matrixA[i].push_back(stoi(numToAdd));
-            matrixA[i].push_back(rand() % 100);
-            cout << matrixA[i][j] << endl;
+        for (int j = 0; j < MATRIX_SIZE; ++j) {
+            string numToAdd;
+            cin >> numToAdd;
+            matrixA[i].push_back(stoi(numToAdd));
+            //            matrixA[i].push_back(rand() % 100);
+            //            cout << matrixA[i][j] << endl;
         }
+
 
         printf("\n");
     }
 
-    func(matrixSize, THREAD_NUM);
+    func(MATRIX_SIZE, THREAD_NUM);
 
     cout << "Matrix A rank is " << maxRang << endl;
 }
