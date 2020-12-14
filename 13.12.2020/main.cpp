@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string>
-#include <vector>
 #include <cmath>
 #include <pthread.h>
 #include <iostream>
@@ -58,14 +57,14 @@ bool IsNumber(char* number)
 }
 
 int main (int argc, char *argv[]) {
-    if (argv[3] == nullptr) {
+    if (argc == 3) {
         if ((!IsNumber(argv[1])) ||
             (!IsNumber(argv[2])))
         {
             cout << "Неверные входные параметры: параметры должны быть числами. Завершение программы" << endl;
             return 0;
         }
-    } else {
+    } else if (argc == 4) {
         if ((!IsNumber(argv[1])) ||
             (!IsNumber(argv[2])) ||
             (!IsNumber(argv[3])))
@@ -73,6 +72,9 @@ int main (int argc, char *argv[]) {
             cout << "Неверные входные параметры: параметры должны быть числами. Завершение программы" << endl;
             return 0;
         }
+    } else {
+        cout << "Неверное число входных параметров: их должно быть 2 или 3. Завершение программы" << endl;
+        return 0;
     }
 
     // Количество потоков (= количеству каннибалов).
@@ -80,7 +82,7 @@ int main (int argc, char *argv[]) {
     // Количество задач (= количеству кусков).
     int tasksNum = currPiecesNum = BOWL_CAPACITY = stoi(argv[2]);
     // Количетсво итераций (= раз, когда горшок с мясом будет полным).
-    int iterationsNum = stoi(argv[3]);
+    int iterationsNum = (argc == 3) ? 2 : stoi(argv[3]);
 
     if (threadsNum <= 0 || tasksNum <= 0 || iterationsNum <= 0) {
         cout << "Неверные входные параметры: параметры должны быть положительными числами. Завершение программы" << endl;
@@ -91,7 +93,13 @@ int main (int argc, char *argv[]) {
 
     if (threadsNum == 1) {
         for (int iterationNum = 0; iterationNum < iterationsNum; ++iterationNum) {
-            for (int i = 0; i < tasksNum; ++i) {
+            for (int i = 0; i < tasksNum + 1; i++) {
+                // В последней итерации не надо наполнять миску.
+                if (iterationNum == iterationsNum - 1 && i == tasksNum) {
+                    break;
+                }
+
+                cout << "i: " << i << endl;
                 func((void *)(1));
             }
         }
