@@ -99,7 +99,6 @@ int main (int argc, char *argv[]) {
                     break;
                 }
 
-                cout << "i: " << i << endl;
                 func((void *)(1));
             }
         }
